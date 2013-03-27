@@ -1,21 +1,33 @@
 class Person:
 
-    def __init__(self, **kwargs):
-        self.name = kwargs['name']
-        self.birth_year = kwargs['birth_year']
-        self.gender = kwargs['gender']
+    def __init__(self, name, birth_year, gender, mother=None, father=None):
+        self.name = name
+        self.birth_year = birth_year
+        self.gender = gender
 
-        self.father = kwargs.get('father', None)
-        self.mother = kwargs.get('mother', None)
+        sef.mother = mother
+        self.father = father
+
+        self._children = list()
+
+        for parent in [mother, father]:
+            if parent:
+                parent._add_child(self)
+
+    def _add_child(self, child):
+        self.children.append(child)
 
     def get_brothers(self):
-        pass
+        return self.mother.children('M') + self.father.children('M')
 
     def get_sisters(self):
-        pass
+        return self.mother.children('F') + self.father.children('F')
 
     def children(self, gender=None):
-        pass
+        if gender:
+            return [child for child in self.children if child.gender == gender]
+        else:
+            return self.children
 
     def is_direct_successor(self, person):
-    	pass
+        return self.mother == person or self.father == person
