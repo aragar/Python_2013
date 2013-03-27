@@ -7,10 +7,12 @@ class PersonTest(unittest.TestCase):
     def setUp(self):
         self.adam = solution.Person(name='Adam', gender='M', birth_year=0)
         self.eva = solution.Person(name='Eva', gender='F', birth_year=0)
-        self.first_son = solution.Person(name='Kain', gender='M', birth_year=20,
-                            father=self.adam, mother=self.eva)
-        self.first_daughter = solution.Person(name='Pepa', gender='F', birth_year=22,
-                            father=self.adam, mother=self.eva)
+        self.first_son = solution.Person(
+            name='Kain', gender='M', birth_year=20,
+            father=self.adam, mother=self.eva)
+        self.first_daughter = solution.Person(
+            name='Pepa', gender='F', birth_year=22,
+            father=self.adam, mother=self.eva)
 
     def tearDown(self):
         del self.adam

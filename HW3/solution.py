@@ -5,7 +5,7 @@ class Person:
         self.birth_year = birth_year
         self.gender = gender
 
-        sef.mother = mother
+        self.mother = mother
         self.father = father
 
         self._children = list()
@@ -15,19 +15,24 @@ class Person:
                 parent._add_child(self)
 
     def _add_child(self, child):
-        self.children.append(child)
+        self._children.append(child)
 
+    # some parent may be missing;
+    # self could be in the list;
     def get_brothers(self):
-        return self.mother.children('M') + self.father.children('M')
+        return list(set(self.mother.children('M') + self.father.children('M')))
 
+    # some parent may be missing;
+    # self could be in the list;
     def get_sisters(self):
-        return self.mother.children('F') + self.father.children('F')
+        return list(set(self.mother.children('F') + self.father.children('F')))
 
     def children(self, gender=None):
         if gender:
-            return [child for child in self.children if child.gender == gender]
+            return [child for child in self._children if child.gender == gender]
         else:
-            return self.children
+            return self._children
 
     def is_direct_successor(self, person):
-        return self.mother == person or self.father == person
+        return (self.mother == person or self.father == person or 
+        	self == person.mother or self == person.father)
