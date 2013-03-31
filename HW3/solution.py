@@ -17,15 +17,22 @@ class Person:
     def _add_child(self, child):
         self._children.append(child)
 
-    # some parent may be missing;
-    # self could be in the list;
-    def get_brothers(self):
-        return list(set(self.mother.children('M') + self.father.children('M')))
+    def __get_known_parents(self):
+        return [parent for parent in [self.mother, self.father] if
+                parent is not None]
 
-    # some parent may be missing;
-    # self could be in the list;
+    def __get_siblings(self, gender):
+    	siblings = set()
+    	for parent in self.__get_known_parents():
+    		siblings |= set(parent.children(gender))
+    	siblings -= {self}
+    	return siblings
+
+    def get_brothers(self):
+        return list(self.__get_siblings('M'))
+
     def get_sisters(self):
-        return list(set(self.mother.children('F') + self.father.children('F')))
+    	return list(self.__get_siblings('F'))
 
     def children(self, gender=None):
         if gender:
@@ -34,5 +41,4 @@ class Person:
             return self._children
 
     def is_direct_successor(self, person):
-        return (self.mother == person or self.father == person or 
-        	self == person.mother or self == person.father)
+        return person.mother == self or person.father == self
