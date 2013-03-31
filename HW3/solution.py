@@ -41,4 +41,4 @@ class Person:
             return self._children
 
     def is_direct_successor(self, person):
-        return person.mother == self or person.father == self
+        return person.mother is self or person.father is self
