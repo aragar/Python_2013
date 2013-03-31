@@ -10,9 +10,8 @@ class Person:
 
         self._children = list()
 
-        for parent in [mother, father]:
-            if parent:
-                parent._add_child(self)
+        for parent in self.__get_known_parents():
+        	parent._add_child(self)
 
     def _add_child(self, child):
         self._children.append(child)
@@ -22,21 +21,22 @@ class Person:
                 parent is not None]
 
     def __get_siblings(self, gender):
-    	siblings = set()
-    	for parent in self.__get_known_parents():
-    		siblings |= set(parent.children(gender))
-    	siblings -= {self}
-    	return siblings
+        siblings = set()
+        for parent in self.__get_known_parents():
+            siblings |= set(parent.children(gender))
+        siblings -= {self}
+        return siblings
 
     def get_brothers(self):
         return list(self.__get_siblings('M'))
 
     def get_sisters(self):
-    	return list(self.__get_siblings('F'))
+        return list(self.__get_siblings('F'))
 
     def children(self, gender=None):
         if gender:
-            return [child for child in self._children if child.gender == gender]
+            return [child for child in self._children if
+                    child.gender == gender]
         else:
             return self._children
 
