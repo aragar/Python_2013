@@ -8,3 +8,16 @@ class TicTacToeBoard:
 
     def __setitem__(self, key, value):
         self.board[key] = value
+
+    def __str__(self):
+        return ('\n' +\
+            '  -------------\n' +\
+            '3 | {} | {} | {} |\n' +\
+            '  -------------\n' +\
+            '2 | {} | {} | {} |\n' +\
+            '  -------------\n' +\
+            '1 | {} | {} | {} |\n' +\
+            '  -------------\n' +\
+            '    A   B   C  \n').format(*[self.board.get(column + row, " ")
+                                        for row in '321'
+                                        for column in 'ABC'])
