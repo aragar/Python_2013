@@ -3,6 +3,7 @@ import solution
 
 
 class TicTacHomeworkTest(unittest.TestCase):
+
     def test_empty(self):
         b = solution.TicTacToeBoard()
         empty_board = '\n  -------------\n' +\
@@ -48,9 +49,9 @@ class TicTacHomeworkTest(unittest.TestCase):
         h = solution.TicTacToeBoard()
         h["A1"] = 'X'
         h["A2"] = 'O'
-        h["B1"] = 'X'
+        h["B2"] = 'X'
         h["A3"] = 'O'
-        h["C1"] = 'X'
+        h["C3"] = 'X'
 
         self.assertEqual('X wins!', h.game_status())
 
@@ -86,6 +87,27 @@ class TicTacHomeworkTest(unittest.TestCase):
 
         self.assertEqual('Game in progress.', p.game_status())
 
+    def test_invalid_value_exception_raises(self):
+        invalid_value = solution.TicTacToeBoard()
+        with self.assertRaises(solution.InvalidValue):
+            invalid_value["A1"] = "F"
+
+    def test_invalid_key_exception_raises(self):
+        invalid_key = solution.TicTacToeBoard()
+        with self.assertRaises(solution.InvalidKey):
+            invalid_key["A51"] = "X"
+
+    def test_invalid_move_exception_raises(self):
+        invalid_move = solution.TicTacToeBoard()
+        with self.assertRaises(solution.InvalidMove):
+            invalid_move["A1"] = "X"
+            invalid_move["A1"] = "O"
+
+    def test_not_your_turn_exception_raises(self):
+        not_your_turn = solution.TicTacToeBoard()
+        with self.assertRaises(solution.NotYourTurn):
+            not_your_turn["A1"] = "X"
+            not_your_turn["A2"] = "X"
 
 if __name__ == '__main__':
     unittest.main()
