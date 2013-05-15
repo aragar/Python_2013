@@ -23,8 +23,11 @@ class World:
 class Cell:
 
     """ A cell in the world of the pythons. """
-    def __init__(self):
-        print("A cell is made")
+    def __init__(self, contents=None):
+        self.contents = contents
+
+    def is_empty(self):
+        return self.contents is None
 
 
 class CellRow:
@@ -35,7 +38,7 @@ class CellRow:
     def __getitem__(self, key):
         if key < 0 or key >= len(self._row):
             raise IndexError
-            
+
         return self._row[key]
 
 
