@@ -1,4 +1,11 @@
+from itertools import accumulate, repeat
+
+
 class IndexError(Exception):
+    pass
+
+
+class ValueError(Exception):
     pass
 
 
@@ -8,10 +15,44 @@ class Death(Exception):
     pass
 
 
+class Vec2D:
+
+    """ A 2D vector. """
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        return Vec2D(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return self + (-other)
+
+    def __mul__(self, other):
+        return Vec2D(self.x * other, self.y * other)
+
+    def __rmul__(self, other):
+        return self * other
+
+    def __iadd__(self, other):
+        self.x = self.x + other.x
+        self.y = self.y + other.y
+
+    def __isub__(self, other):
+        self.x = self.x - other.x
+        self.y = self.y - other.y
+
+    def __imul__(self, other):
+        self.x = self.x * other
+        self.y = self.y * other
+
+    def __neg__(self):
+        return Vec2D(-self.x, -self.y)
+
+
 class World:
 
     """ The world of the pythons. """
-
     def __init__(self, width):
         this._width = width
         this._world = [CellRow(width) for _ in range(width)]
@@ -48,6 +89,12 @@ class CellRow:
 
         return self._row[key]
 
+    def __setitem__(self, key, value):
+        if key < 0 or key >= self._width:
+            raise IndexError
+
+        self._row[key].contents = value
+
 
 class WorldObject:
 
@@ -68,13 +115,15 @@ class Food(WorldObject):
 class PythonPart(WorldObject):
 
     """ The parts of a python. """
-    pass
+    def __init__(self, direction=Vec2D()):
+        self._direction = direction
 
 
 class PythonHead(PythonPart):
 
     """ The python's head. """
-    pass
+    def __init__(self, coords=Vec2D()):
+        self._coords = coords
 
 
 class Python:
@@ -82,54 +131,15 @@ class Python:
     UP = Vec2D(0, 1)
     RIGHT = Vec2D(1, 0)
     DOWN = Vec2D(0, -1)
+    OPPOSITE = {LEFT: RIGHT, UP: DOWN, RIGHT: LEFT, DOWN: UP}
 
     """ This is the class modelling the python itself. """
     def __init__(self, world, coords, size, direction):
-        self.OPPOSITE = {Python.LEFT: Python.RIGHT, Python.UP: Python.DOWN,
-                         Python.RIGHT: Python.LEFT, Python.DOWN: Python.UP}
-
         self._world = world
-        self._position = coords
         self.size = size
-        self._direction = direction
-
-        self._parts_positions = [self.OPPOSITE[self._direction]
-                                 for _ in range(self.size)]
+        self._head = PythonHead(coords, direction)
+        self._body = [PythonPart(self.OPPOSITE[direction])
+                      for _ in range(size)]
 
     def move(self, direction):
         pass
-
-
-class Vec2D:
-
-    """ A 2D vector. """
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def __add__(self, other):
-        return Vec2D(self.x + other.x, self.y + other.y)
-
-    def __sub__(self, other):
-        return self + (-other)
-
-    def __mul__(self, other):
-        return Vec2D(self.x * other, self.y * other)
-
-    def __rmul__(self, other):
-        return self * other
-
-    def __iadd__(self, other):
-        self.x = self.x + other.x
-        self.y = self.y + other.y
-
-    def __isub__(self, other):
-        self.x = self.x - other.x
-        self.y = self.y - other.y
-
-    def __imul__(self, other):
-        self.x = self.x * other
-        self.y = self.y * other
-
-    def __neg__(self):
-        return Vec2D(-self.x, -self.y)
