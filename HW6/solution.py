@@ -9,15 +9,17 @@ class ValueError(Exception):
     pass
 
 
+class TypeError(Exception):
+    pass
+
+
 class Death(Exception):
 
-    """ The Death itself. """
     pass
 
 
 class Vec2D:
 
-    """ A 2D vector. """
     def __init__(self, x=0, y=0):
         self.x = x
         self.y = y
@@ -52,7 +54,6 @@ class Vec2D:
 
 class World:
 
-    """ The world of the pythons. """
     def __init__(self, width):
         this._width = width
         this._world = [CellRow(width) for _ in range(width)]
@@ -69,17 +70,21 @@ class World:
 
 class Cell:
 
-    """ A cell in the world of the pythons. """
     def __init__(self, contents=None):
         self.contents = contents
 
     def is_empty(self):
         return self.contents is None
 
+    def __setattr__(self, name, value):
+        if name == 'contents' and not isinstance(value, WorldObject):
+            raise TypeError
+        else:
+            super().__setattr__(name, value)
+
 
 class CellRow:
 
-    """ Implementation of a row of Cells. """
     def __init__(self, width):
         self._row = [Cell() for _ in range(width)]
 
@@ -98,30 +103,23 @@ class CellRow:
 
 class WorldObject:
 
-    """ Object in the pythons' world. Every object in this world should inherit
-    this class.
-
-    """
     pass
 
 
 class Food(WorldObject):
 
-    """ Some food. """
     def __init__(self, energy=0):
         self.energy = energy
 
 
 class PythonPart(WorldObject):
 
-    """ The parts of a python. """
     def __init__(self, direction=Vec2D()):
         self._direction = direction
 
 
 class PythonHead(PythonPart):
 
-    """ The python's head. """
     def __init__(self, coords=Vec2D()):
         self._coords = coords
 
@@ -133,10 +131,9 @@ class Python:
     DOWN = Vec2D(0, -1)
     OPPOSITE = {LEFT: RIGHT, UP: DOWN, RIGHT: LEFT, DOWN: UP}
 
-    """ This is the class modelling the python itself. """
     def __init__(self, world, coords, size, direction):
         self._world = world
-        
+
         self.size = size
         self.direction = direction
 
