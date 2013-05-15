@@ -51,12 +51,15 @@ class Vec2D:
     def __neg__(self):
         return Vec2D(-self.x, -self.y)
 
+    def __iter__(self):
+        return iter((self.x, self.y))
+
 
 class World:
 
     def __init__(self, width):
-        this._width = width
-        this._world = [CellRow(width) for _ in range(width)]
+        self._width = width
+        self._world = [CellRow(width) for _ in range(width)]
 
     def __len__(self):
         return self._width
@@ -77,7 +80,8 @@ class Cell:
         return self.contents is None
 
     def __setattr__(self, name, value):
-        if name == 'contents' and not isinstance(value, WorldObject):
+        if name == 'contents' and value is not None and \
+                not isinstance(value, WorldObject):
             raise TypeError
         else:
             super().__setattr__(name, value)
@@ -95,7 +99,7 @@ class CellRow:
         return self._row[key]
 
     def __setitem__(self, key, value):
-        if key < 0 or key >= self._width:
+        if key < 0 or key >= len(self._row):
             raise IndexError
 
         self._row[key].contents = value
@@ -137,7 +141,7 @@ class Python:
         self.size = size
         self.direction = direction
 
-        self._head = PythonHead(coords, direction)
+        self._head = PythonHead(coords)
         self._body = [PythonPart(self.OPPOSITE[direction])
                       for _ in range(size)]
 
