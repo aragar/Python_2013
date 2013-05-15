@@ -31,6 +31,7 @@ class Cell:
 
 
 class CellRow:
+
     """ Implementation of a row of Cells. """
     def __init__(self, width):
         self._row = [Cell() for _ in range(width)]
@@ -40,8 +41,6 @@ class CellRow:
             raise IndexError
 
         return self._row[key]
-
-
 
 
 class WorldObject:
@@ -56,7 +55,8 @@ class WorldObject:
 class Food(WorldObject):
 
     """ Some food. """
-    pass
+    def __init__(self, energy=0):
+        self.energy = energy
 
 
 class PythonPart(WorldObject):
