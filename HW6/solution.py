@@ -119,13 +119,13 @@ class Food(WorldObject):
 class PythonPart(WorldObject):
 
     def __init__(self, direction=Vec2D()):
-        self._direction = direction
+        self.direction = direction
 
 
 class PythonHead(PythonPart):
 
     def __init__(self, coords=Vec2D()):
-        self._coords = coords
+        self.coords = coords
 
 
 class Python:
@@ -136,10 +136,11 @@ class Python:
     OPPOSITE = {LEFT: RIGHT, UP: DOWN, RIGHT: LEFT, DOWN: UP}
 
     def __init__(self, world, coords, size, direction):
-        self._world = world
+        self.world = world
 
         self.size = size
         self.direction = direction
+        self.energy = 0
 
         self._head = PythonHead(coords)
         self._body = [PythonPart(self.OPPOSITE[direction])
@@ -147,7 +148,36 @@ class Python:
 
         world[coords.x][coords.y].contents = self._head
         for i, offset in enumerate(accumulate(repeat(self.OPPOSITE[direction], size))):
-            world[coords.x + offset.x][coords.y + offset.y] = self._body[i]
+            world[coords.x + offset.x][coords.y + offset.y].contents = self._body[i]
 
     def move(self, direction):
-        pass
+        if direction == self.OPPOSITE[self.direction]:
+            raise ValueError
+
+        new_head = PythonHead(self._head.coords + direction)
+
+        if new_head.coords.x < 0 or new_head.coords.x >= len(self.world):
+            raise Death
+        if new_head.coords.y < 0 or new_head.coords.y >= len(self.world):
+            raise Death
+
+        new_head_cell = self.world[new_head.coords.x][new_head.coords.y]
+        if isinstance(new_head_cell, PythonPart):
+            raise Death
+
+        if isinstance(new_head_cell, Food):
+            self.energy += new_head_cell.energy
+        new_head_cell.contents = new_head
+
+        last_part_offset = list(accumulate(
+            part.direction for part in self._body))[-1]
+        last_part_coords = self._head.coords + last_part_offset
+        self.world[last_part_coords.x][last_part_coords.y].contents = None
+
+        new_part = PythonPart(self.OPPOSITE[self.direction])
+        self.world[self._head.coords.x][
+            self._head.coords.y].contents = new_part
+
+        self.direction = direction
+        self._body = [new_part] + self._body[:-1]
+        self._head = new_head
