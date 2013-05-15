@@ -141,5 +141,9 @@ class Python:
         self._body = [PythonPart(self.OPPOSITE[direction])
                       for _ in range(size)]
 
+        world[coords.x][coords.y].contents = self._head
+        for i, offset in enumerate(accumulate(repeat(self.OPPOSITE[direction], size))):
+            world[coords.x + offset.x][coords.y + offset.y] = self._body[i]
+
     def move(self, direction):
         pass
