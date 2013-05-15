@@ -80,7 +80,37 @@ class Python:
 class Vec2D:
 
     """ A 2D vector. """
-    pass
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        return Vec2D(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return self + (-other)
+
+    def __mul__(self, other):
+        return Vec2D(self.x * other, self.y * other)
+
+    def __rmul__(self, other):
+        return self * other
+
+    def __iadd__(self, other):
+        self.x = self.x + other.x
+        self.y = self.y + other.y
+
+    def __isub__(self, other):
+        self.x = self.x - other.x
+        self.y = self.y - other.y
+
+    def __imul__(self, other):
+        self.x = self.x * other
+        self.y = self.y * other
+
+    def __neg__(self):
+        return Vec2D(-self.x, -self.y)
+
 
 
 class Death(Exception):
