@@ -136,7 +136,10 @@ class Python:
     """ This is the class modelling the python itself. """
     def __init__(self, world, coords, size, direction):
         self._world = world
+        
         self.size = size
+        self.direction = direction
+
         self._head = PythonHead(coords, direction)
         self._body = [PythonPart(self.OPPOSITE[direction])
                       for _ in range(size)]
