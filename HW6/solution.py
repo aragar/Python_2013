@@ -2,6 +2,12 @@ class IndexError(Exception):
     pass
 
 
+class Death(Exception):
+
+    """ The Death itself. """
+    pass
+
+
 class World:
 
     """ The world of the pythons. """
@@ -72,9 +78,26 @@ class PythonHead(PythonPart):
 
 
 class Python:
+    LEFT = Vec2D(-1, 0)
+    UP = Vec2D(0, 1)
+    RIGHT = Vec2D(1, 0)
+    DOWN = Vec2D(0, -1)
 
     """ This is the class modelling the python itself. """
-    pass
+    def __init__(self, world, coords, size, direction):
+        self.OPPOSITE = {Python.LEFT: Python.RIGHT, Python.UP: Python.DOWN,
+                         Python.RIGHT: Python.LEFT, Python.DOWN: Python.UP}
+
+        self._world = world
+        self._position = coords
+        self.size = size
+        self._direction = direction
+
+        self._parts_positions = [self.OPPOSITE[self._direction]
+                                 for _ in range(self.size)]
+
+    def move(self, direction):
+        pass
 
 
 class Vec2D:
@@ -110,10 +133,3 @@ class Vec2D:
 
     def __neg__(self):
         return Vec2D(-self.x, -self.y)
-
-
-
-class Death(Exception):
-
-    """ The Death itself. """
-    pass
