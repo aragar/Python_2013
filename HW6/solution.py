@@ -6,18 +6,39 @@ class World:
 
     """ The world of the pythons. """
 
-	def __init__(self, width):
-		this.width = width
+    def __init__(self, width):
+        this._width = width
+        this._world = [CellRow(width) for _ in range(width)]
 
-	def __len__(self):
-		return self.width
+    def __len__(self):
+        return self._width
 
+    def __getitem__(self, key):
+        if key < 0 or key >= self._width:
+            raise IndexError
+
+        return self._world[key]
 
 
 class Cell:
 
     """ A cell in the world of the pythons. """
-    pass
+    def __init__(self):
+        print("A cell is made")
+
+
+class CellRow:
+    """ Implementation of a row of Cells. """
+    def __init__(self, width):
+        self._row = [Cell() for _ in range(width)]
+
+    def __getitem__(self, key):
+        if key < 0 or key >= len(self._row):
+            raise IndexError
+            
+        return self._row[key]
+
+
 
 
 class WorldObject:
