@@ -1,0 +1,1 @@
+Реализация на играта [Reversi](http://en.wikipedia.org/wiki/Reversi) с някакъв AI.
