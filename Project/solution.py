@@ -27,8 +27,8 @@ class ReversiBoard:
                                in range(self.BOARD_SIZE, 0, -1)]
         self.ROW_LETTERS = ascii_uppercase[0:self.BOARD_SIZE]
 
-        self.BLACK = 0
-        self.WHITE = 1
+        self.BLACK = 'B'
+        self.WHITE = 'W'
 
         self.VALUES = [self.BLACK, self.WHITE]
         self.GAME_IN_PROGRESS = 'Game in progress.'
@@ -40,11 +40,26 @@ class ReversiBoard:
                      for row in self.ROW_LETTERS
                      for column in self.COLUMN_NUMBERS]
 
+        self.board = dict()
+        self.status = self.GAME_IN_PROGRESS
+        self.last_move = None
+
     def __getitem__(self, key):
-        pass
+        return self.board.get(key, ' ')
 
     def __setitem__(self, key, value):
-        pass
+        if key in self.board:
+            raise InvalidMove
+        elif key not in self.KEYS:
+            raise InvalidKey
+        elif value not in self.VALUES:
+            raise InvalidValue
+        elif value == self.last_move:
+            raise NotYourTurn
+        else:
+            self.board[key] = value
+            self.last_move = value
+            self.update_game_status()
 
     def update_game_status(self):
         pass
@@ -53,4 +68,4 @@ class ReversiBoard:
         pass
 
     def game_status(self):
-        pass
+        return game_status
