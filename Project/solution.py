@@ -18,22 +18,27 @@ class NotYourTurn(Exception):
 
 
 class ReversiBoard:
-    BOARD_SIZE = 8
-
-    COLUMN_NUMBERS = [str(number) for number in range(BOARD_SIZE, 0, -1)]
-    ROW_LETTERS = ascii_uppercase[0:BOARD_SIZE]
-
-    BLACK = 0
-    WHITE = 1
-
-    VALUES = [BLACK, WHITE]
-    GAME_IN_PROGRESS = 'Game in progress.'
-    TIES = 'Ties!'
-    WHITE_WINS = 'White wins!'
-    BLACK_WINS = 'Black wins!'
 
     def __init__(self):
-        pass
+        self.BOARD_SIZE = 8
+
+        self.COLUMN_NUMBERS = [str(number)
+                               for number
+                               in range(self.BOARD_SIZE, 0, -1)]
+        self.ROW_LETTERS = ascii_uppercase[0:self.BOARD_SIZE]
+
+        self.BLACK = 0
+        self.WHITE = 1
+
+        self.VALUES = [self.BLACK, self.WHITE]
+        self.GAME_IN_PROGRESS = 'Game in progress.'
+        self.TIES = 'Ties!'
+        self.WHITE_WINS = 'White wins!'
+        self.BLACK_WINS = 'Black wins!'
+
+        self.KEYS = [row + column
+                     for row in self.ROW_LETTERS
+                     for column in self.COLUMN_NUMBERS]
 
     def __getitem__(self, key):
         pass
