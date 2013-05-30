@@ -1,1 +1,1 @@
-Реализация на играта [Reversi](http://en.wikipedia.org/wiki/Reversi) с някакъв AI.
+Implementation of the game [Reversi](http://en.wikipedia.org/wiki/Reversi) with some kind of AI.
