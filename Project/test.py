@@ -11,7 +11,7 @@ class TestConstants(unittest.TestCase):
     def test_board_column_names(self):
         board = ReversiBoard()
         self.assertEqual(board.COLUMN_NUMBERS, [
-                         '8', '7', '6', '5', '4', '3', '2', '1'])
+                         '1', '2', '3', '4', '5', '6', '7', '8'])
 
     def test_board_row_names(self):
         board = ReversiBoard()
@@ -19,14 +19,14 @@ class TestConstants(unittest.TestCase):
 
     def test_board_keys(self):
         board = ReversiBoard()
-        keys = ['A8', 'A7', 'A6', 'A5', 'A4', 'A3', 'A2', 'A1',
-                'B8', 'B7', 'B6', 'B5', 'B4', 'B3', 'B2', 'B1',
-                'C8', 'C7', 'C6', 'C5', 'C4', 'C3', 'C2', 'C1',
-                'D8', 'D7', 'D6', 'D5', 'D4', 'D3', 'D2', 'D1',
-                'E8', 'E7', 'E6', 'E5', 'E4', 'E3', 'E2', 'E1',
-                'F8', 'F7', 'F6', 'F5', 'F4', 'F3', 'F2', 'F1',
-                'G8', 'G7', 'G6', 'G5', 'G4', 'G3', 'G2', 'G1',
-                'H8', 'H7', 'H6', 'H5', 'H4', 'H3', 'H2', 'H1',]
+        keys = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8',
+                'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',
+                'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8',
+                'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8',
+                'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8',
+                'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8',
+                'G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8',
+                'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7', 'H8',]
         self.assertEqual(board.KEYS, keys)
 
 

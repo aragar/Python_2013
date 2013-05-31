@@ -24,7 +24,7 @@ class ReversiBoard:
 
         self.COLUMN_NUMBERS = [str(number)
                                for number
-                               in range(self.BOARD_SIZE, 0, -1)]
+                               in range(1, self.BOARD_SIZE + 1)]
         self.ROW_LETTERS = ascii_uppercase[0:self.BOARD_SIZE]
 
         self.BLACK = 'B'
