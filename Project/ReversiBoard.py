@@ -17,10 +17,10 @@ class NotYourTurn(Exception):
 class ReversiBoard:
     BOARD_SIZE = 8
 
-    WHITE_PLAYER = 'O'
-    BLACK_PLAYER = 'X'
+    WHITE = 'O'
+    BLACK = 'X'
 
-    PLAYERS = [WHITE_PLAYER, BLACK_PLAYER]
+    PLAYERS = [WHITE, BLACK]
 
     class ReversiBoardLine:
 
@@ -48,7 +48,12 @@ class ReversiBoard:
 
     def __init__(self):
         self.board = [self.ReversiBoardLine(self) for _ in range(0, self.BOARD_SIZE)]
-        self.last_move = self.WHITE_PLAYER # Blacks are first to play
+        self.last_move = self.WHITE # Blacks are first to play
+
+        self.board[3][4] = self.BLACK
+        self.board[3][3] = self.WHITE
+        self.board[4][3] = self.BLACK
+        self.board[4][4] = self.WHITE
 
     def __getitem__(self, key):
         if key not in range(0, self.BOARD_SIZE):
