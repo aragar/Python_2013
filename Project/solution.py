@@ -17,6 +17,24 @@ class NotYourTurn(Exception):
     pass
 
 
+class ReversiBoardLine:
+
+    def __init__(self):
+        self.boardLine = dict()
+
+    def __getitem__(self, key):
+        if key not in ReversiBoard.COLUMN_LETTERS:
+            raise InvalidKey
+        return self.boardLine.get(key, '')
+
+    def __setitem__(self, key, value):
+        if key not in ReversiBoard.COLUMN_LETTERS:
+            raise InvalidIndex
+        elif key in self.boardLine:
+            raise InvalidMove
+        self.boardLine[key] = value
+
+
 class ReversiBoard:
     BOARD_SIZE = 8
 
@@ -29,27 +47,10 @@ class ReversiBoard:
     WHITE = 'W'
 
     VALUES = [self.BLACK, self.WHITE]
-    GAME_IN_PROGRESS = 'Game in progress.'
+    GAME_IN_PROGRESS = 'Game in prosgress.'
     TIES = 'Ties!'
     WHITE_WINS = 'White wins!'
     BLACK_WINS = 'Black wins!'
-
-    class ReversiBoardLine:
-
-        def __init__(self):
-            self.boardLine = dict()
-
-        def __getitem__(self, key):
-            if key not in ReversiBoard.COLUMN_LETTERS:
-                raise InvalidKey
-            return self.boardLine.get(key, '')
-
-        def __setitem__(self, key, value):
-            if key not in ReversiBoard.COLUMN_LETTERS:
-                raise InvalidIndex
-            elif key in self.boardLine:
-                raise InvalidMove
-            self.boardLine[key] = value
 
     def __init__(self):
         self.board = dict()
