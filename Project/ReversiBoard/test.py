@@ -1,5 +1,6 @@
 import unittest
-from ReversiBoard import *
+
+from .ReversiBoard import *
 
 
 class TestReversiBoard(unittest.TestCase):
