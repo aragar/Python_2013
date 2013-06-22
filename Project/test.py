@@ -37,12 +37,12 @@ class TestReversiBoard(unittest.TestCase):
 
     def test_get_opposites(self):
         board = ReversiBoard()
-        self.assertEqual(board.get_opposites(2, 3, ReversiBoard.BLACK),
+        self.assertEqual(board.get_cells_to_flip(2, 3, ReversiBoard.BLACK),
                          [(3, 3)])
 
     def test_get_no_opposites(self):
         board = ReversiBoard()
-        self.assertEqual(board.get_opposites(1, 1, ReversiBoard.BLACK),
+        self.assertEqual(board.get_cells_to_flip(1, 1, ReversiBoard.BLACK),
                          [])
 
     def test_invalid_move_exception_raises_move_not_possible(self):
@@ -62,7 +62,63 @@ class TestReversiBoard(unittest.TestCase):
         board[4][2] = ReversiBoard.WHITE
         board[5][3] = ReversiBoard.BLACK
         self.assertEqual(board.get_possible_moves(ReversiBoard.WHITE),
-            [(2,2),(2,4),(6,2),(6,4)])
+                         [(2, 2), (2, 4), (6, 2), (6, 4)])
+
+    def test_initial_str(self):
+        initial_board = "\n" +\
+            "    1   2   3   4   5   6   7   8  \n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "1 |   |   |   |   |   |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "2 |   |   |   |   |   |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "3 |   |   |   |   |   |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "4 |   |   |   | O | X |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "5 |   |   |   | X | O |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "6 |   |   |   |   |   |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "7 |   |   |   |   |   |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "8 |   |   |   |   |   |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n"
+
+        board = ReversiBoard()
+
+        self.maxDiff = None
+        self.assertEqual(board.__str__(), initial_board)
+
+    def test_several_moves_str(self):
+        actual_board = "\n" +\
+            "    1   2   3   4   5   6   7   8  \n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "1 |   |   |   |   |   |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "2 |   |   |   |   |   |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "3 |   |   |   | X | O |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "4 |   |   |   | O | O |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "5 |   |   | O | X | O |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "6 |   |   |   | X |   |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "7 |   |   |   |   |   |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n" +\
+            "8 |   |   |   |   |   |   |   |   |\n" +\
+            "  +---+---+---+---+---+---+---+---+\n"
+
+        board = ReversiBoard()
+        board[2][3] = ReversiBoard.BLACK
+        board[4][2] = ReversiBoard.WHITE
+        board[5][3] = ReversiBoard.BLACK
+        board[2][4] = ReversiBoard.WHITE
+
+        self.maxDiff = None
+        self.assertEqual(board.__str__(), actual_board)
 
 if __name__ == '__main__':
     unittest.main()

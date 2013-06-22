@@ -73,11 +73,11 @@ class ReversiBoard:
                           for x in range(0, self.BOARD_SIZE)
                           for y in range(0, self.BOARD_SIZE)
                           if (self._board[x][y] not in self.PLAYERS and
-                              len(self.get_opposites(x, y, player)) > 0)]
+                              len(self.get_cells_to_flip(x, y, player)) > 0)]
 
         return possible_moves
 
-    def get_opposites(self, x, y, player):
+    def get_cells_to_flip(self, x, y, player):
         opposites = []
 
         if (x in range(0, self.BOARD_SIZE) and
@@ -116,7 +116,28 @@ class ReversiBoard:
             raise InvalidValue
 
         player = self._board[x][y]
-        opposites = self.get_opposites(x, y, player)
+        opposites = self.get_cells_to_flip(x, y, player)
 
         for (x, y) in opposites:
             self._board[x][y] = player
+
+    def __str__(self):
+        HLINE = '  ' + ('+---' * self.BOARD_SIZE) + '+'
+        NLINE = '  ' + ('  {} ' * self.BOARD_SIZE).format(
+            *range(1, self.BOARD_SIZE + 1)) + ' '
+
+        representaion = '\n'
+        representaion += NLINE + '\n'
+        representaion += HLINE + '\n'
+        for x in range(self.BOARD_SIZE):
+
+            representaion += '{} '.format(x + 1)
+            for y in range(self.BOARD_SIZE):
+                representaion += '| {} '.format(self._board[
+                                                x][y] if self._board[x][y] else ' ')
+            representaion += '|\n'
+
+            representaion += HLINE + '\n'
+
+        # print(representaion)
+        return representaion
