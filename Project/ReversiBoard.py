@@ -50,8 +50,6 @@ class ReversiBoard:
                 raise InvalidValue
             elif value == self.board.last_move:
                 raise NotYourTurn
-            elif (self.row, key) not in self.board.get_possible_moves(value):
-                raise InvalidMove
             else:
                 self.board_line[key] = value
                 self.board.update_game(self.row, key)
