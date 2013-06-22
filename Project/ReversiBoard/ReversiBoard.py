@@ -21,6 +21,7 @@ class ReversiBoard:
     BLACK = 'X'
 
     PLAYERS = [WHITE, BLACK]
+    COORDINATE = list(range(1, BOARD_SIZE + 1))
 
     def __init__(self):
         self._board = [["" for _ in range(0, self.BOARD_SIZE)]
@@ -139,5 +140,4 @@ class ReversiBoard:
 
             representaion += HLINE + '\n'
 
-        # print(representaion)
         return representaion

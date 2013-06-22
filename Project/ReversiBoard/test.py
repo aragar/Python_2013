@@ -1,6 +1,6 @@
 import unittest
 
-from .ReversiBoard import *
+# from Project.ReversiBoard import *
 
 
 class TestReversiBoard(unittest.TestCase):
@@ -122,4 +122,7 @@ class TestReversiBoard(unittest.TestCase):
         self.assertEqual(board.__str__(), actual_board)
 
 if __name__ == '__main__':
+    from ReversiBoard import *
     unittest.main()
+else:
+    from .ReversiBoard import *
