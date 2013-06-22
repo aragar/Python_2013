@@ -35,13 +35,15 @@ class TestReversiBoard(unittest.TestCase):
         possible_moves = board.get_possible_moves(ReversiBoard.BLACK)
         self.assertEqual(possible_moves, [(2, 3), (3, 2), (4, 5), (5, 4)])
 
-    def test_check_move_possible(self):
+    def test_get_opposites(self):
         board = ReversiBoard()
-        self.assertTrue(board.check_move_possible(2, 3, ReversiBoard.BLACK))
+        self.assertEqual(board.get_opposites(2, 3, ReversiBoard.BLACK),
+                         [(3, 3)])
 
-    def test_check_move_not_possible(self):
+    def test_get_no_opposites(self):
         board = ReversiBoard()
-        self.assertFalse(board.check_move_possible(1, 1, ReversiBoard.BLACK))        
+        self.assertEqual(board.get_opposites(1, 1, ReversiBoard.BLACK),
+                         [])
 
     def test_invalid_move_exception_raises_move_not_possible(self):
         move_not_possible = ReversiBoard()

@@ -51,9 +51,10 @@ class ReversiBoard:
             elif value == self.board.last_move:
                 raise NotYourTurn
             elif (self.row, key) not in self.board.get_possible_moves(value):
-               raise InvalidMove
+                raise InvalidMove
             else:
                 self.board_line[key] = value
+                self.board.update_game(self.row, key)
                 self.board.last_move = value
 
     def __init__(self):
@@ -71,37 +72,39 @@ class ReversiBoard:
         possible_moves = [(x, y)
                           for x in range(0, self.BOARD_SIZE)
                           for y in range(0, self.BOARD_SIZE)
-                          if self.check_move_possible(x, y, player)]
+                          if len(self.get_opposites(x, y, player)) > 0]
 
         return possible_moves
 
-    def check_move_possible(self, x, y, player):
-        if x not in range(0, self.BOARD_SIZE) or y not in range(0, self.BOARD_SIZE):
-            return False
+    def get_opposites(self, x, y, player):
+        opposites = []
 
-        if player not in self.PLAYERS:
-            return False
+        if (x in range(0, self.BOARD_SIZE) and
+            y in range(0, self.BOARD_SIZE) and
+                player in self.PLAYERS):
+            DX = [1, 1, 0, -1, -1, -1, 0, 1]
+            DY = [0, -1, -1, -1, 0, 1, 1, 1]
 
-        if self.board[x][y]:
-            return False
+            for delta in range(0, self.BOARD_SIZE):
+                opposites_line = []
 
-        DX = [1, 1, 0, -1, -1, -1, 0, 1]
-        DY = [0, -1, -1, -1, 0, 1, 1, 1]
+                new_x = x + DX[delta]
+                new_y = y + DY[delta]
+                while (new_x in range(0, self.BOARD_SIZE) and
+                       new_y in range(0, self.BOARD_SIZE) and
+                       self.board[new_x][new_y] and
+                       self.board[new_x][new_y] != player):
+                    opposites_line.append((new_x, new_y))
+                    new_x += DX[delta]
+                    new_y += DY[delta]
 
-        for delta in range(0, self.BOARD_SIZE):
-            new_x = x + DX[delta]
-            new_y = y + DY[delta]
-            while (new_x in range(0, self.BOARD_SIZE) and
-                   new_y in range(0, self.BOARD_SIZE) and
-                   self.board[new_x][new_y] and
-                   self.board[new_x][new_y] != player):
-                new_x += DX[delta]
-                new_y += DY[delta]
+                if (new_x in range(0, self.BOARD_SIZE) and
+                    new_y in range(0, self.BOARD_SIZE) and
+                    self.board[new_x][new_y] == player and
+                        len(opposites_line) > 0):
+                    opposites.extend(opposites_line)
 
-            if (new_x in range(0, self.BOARD_SIZE) and
-                new_y in range(0, self.BOARD_SIZE) and
-                self.board[new_x][new_y] == player and
-                    (new_x - x != DX[delta] or new_y - y != DY[delta])):
-                return True
+        return opposites
 
-        return False
+    def update_game(self, x, y):
+        pass
