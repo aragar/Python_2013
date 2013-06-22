@@ -22,55 +22,58 @@ class ReversiBoard:
 
     PLAYERS = [WHITE, BLACK]
 
-    class ReversiBoardLine:
-
-        def __init__(self, board, row):
-            self.board = board
-            self.row = row
-            self.board_line = dict()
-
-            if row == 3:
-                self.board_line[3] = ReversiBoard.WHITE
-                self.board_line[4] = ReversiBoard.BLACK
-            elif row == 4:
-                self.board_line[3] = ReversiBoard.BLACK
-                self.board_line[4] = ReversiBoard.WHITE
-
-        def __getitem__(self, key):
-            if key not in range(0, ReversiBoard.BOARD_SIZE):
-                raise InvalidKey
-            return self.board_line.get(key, '')
-
-        def __setitem__(self, key, value):
-            if key not in range(0, ReversiBoard.BOARD_SIZE):
-                raise InvalidKey
-            elif key in self.board_line:
-                raise InvalidMove
-            elif value not in ReversiBoard.PLAYERS:
-                raise InvalidValue
-            elif value == self.board.last_move:
-                raise NotYourTurn
-            else:
-                self.board_line[key] = value
-                self.board.update_game(self.row, key)
-                self.board.last_move = value
-
     def __init__(self):
-        self.board = [self.ReversiBoardLine(self, row)
-                      for row
-                      in range(0, self.BOARD_SIZE)]
+        self._board = [["" for _ in range(0, self.BOARD_SIZE)]
+                       for _ in range(0, self.BOARD_SIZE)]
+
+        self._board[3][4] = ReversiBoard.BLACK
+        self._board[3][3] = ReversiBoard.WHITE
+        self._board[4][3] = ReversiBoard.BLACK
+        self._board[4][4] = ReversiBoard.WHITE
+
         self.last_move = self.WHITE  # Blacks are first to play
 
     def __getitem__(self, key):
         if key not in range(0, self.BOARD_SIZE):
             raise InvalidKey
-        return self.board[key]
+
+        row = self._board[key]
+        row_number = key
+        _board = self
+
+        # Generates a class, which modifies this row
+        class ReversiBoardLine:
+
+            def __getitem__(self, key):
+                if key not in range(0, ReversiBoard.BOARD_SIZE):
+                    raise InvalidKey
+
+                return row[key]
+
+            def __setitem__(self, key, value):
+                if key not in range(0, ReversiBoard.BOARD_SIZE):
+                    raise InvalidKey
+                elif row[key] in ReversiBoard.PLAYERS:
+                    raise InvalidMove
+                elif value not in ReversiBoard.PLAYERS:
+                    raise InvalidValue
+                elif value == _board.last_move:
+                    raise NotYourTurn
+                elif (row_number, key) not in _board.get_possible_moves(value):
+                    raise InvalidMove
+                else:
+                    row[key] = value
+                    _board.update_game(row_number, key)
+                    _board.last_move = value
+
+        return ReversiBoardLine()
 
     def get_possible_moves(self, player):
         possible_moves = [(x, y)
                           for x in range(0, self.BOARD_SIZE)
                           for y in range(0, self.BOARD_SIZE)
-                          if len(self.get_opposites(x, y, player)) > 0]
+                          if (self._board[x][y] not in self.PLAYERS and
+                              len(self.get_opposites(x, y, player)) > 0)]
 
         return possible_moves
 
@@ -90,19 +93,30 @@ class ReversiBoard:
                 new_y = y + DY[delta]
                 while (new_x in range(0, self.BOARD_SIZE) and
                        new_y in range(0, self.BOARD_SIZE) and
-                       self.board[new_x][new_y] and
-                       self.board[new_x][new_y] != player):
+                       self._board[new_x][new_y] and
+                       self._board[new_x][new_y] != player):
                     opposites_line.append((new_x, new_y))
                     new_x += DX[delta]
                     new_y += DY[delta]
 
                 if (new_x in range(0, self.BOARD_SIZE) and
                     new_y in range(0, self.BOARD_SIZE) and
-                    self.board[new_x][new_y] == player and
+                    self._board[new_x][new_y] == player and
                         len(opposites_line) > 0):
                     opposites.extend(opposites_line)
 
         return opposites
 
     def update_game(self, x, y):
-        pass
+        if (x not in range(0, self.BOARD_SIZE) or
+                y not in range(0, self.BOARD_SIZE)):
+            raise InvalidKey
+
+        if self._board[x][y] not in self.PLAYERS:
+            raise InvalidValue
+
+        player = self._board[x][y]
+        opposites = self.get_opposites(x, y, player)
+
+        for (x, y) in opposites:
+            self._board[x][y] = player
