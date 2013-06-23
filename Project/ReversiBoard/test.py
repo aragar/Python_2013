@@ -121,6 +121,45 @@ class TestReversiBoard(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(board.__str__(), actual_board)
 
+    def test_initial_status(self):
+        board = ReversiBoard()
+
+        self.assertEqual(board.status, ReversiBoard.GAME_IN_PROGRESS)
+
+    def test_in_progress_status(self):
+        board = ReversiBoard()
+
+        board[2][3] = ReversiBoard.BLACK
+        board[4][2] = ReversiBoard.WHITE
+        board[5][3] = ReversiBoard.BLACK
+        board[2][4] = ReversiBoard.WHITE
+
+        self.assertEqual(board.status, ReversiBoard.GAME_IN_PROGRESS)
+
+    def test_you_lose_status(self):
+        board = ReversiBoard()
+
+        board[2][3] = ReversiBoard.BLACK
+        board[2][2] = ReversiBoard.WHITE
+        board[2][1] = ReversiBoard.BLACK
+        board[1][1] = ReversiBoard.WHITE
+        board[0][1] = ReversiBoard.BLACK
+        board[0][0] = ReversiBoard.WHITE
+        board[3][2] = ReversiBoard.BLACK
+        board[0][2] = ReversiBoard.WHITE
+        board[1][2] = ReversiBoard.BLACK
+        board[1][3] = ReversiBoard.WHITE
+        board[0][3] = ReversiBoard.BLACK
+        board[0][4] = ReversiBoard.WHITE
+        board[1][0] = ReversiBoard.BLACK
+        board[2][0] = ReversiBoard.WHITE
+        board[4][5] = ReversiBoard.BLACK
+        board[1][4] = ReversiBoard.WHITE
+        board[0][5] = ReversiBoard.BLACK
+        board[0][6] = ReversiBoard.WHITE
+
+        self.assertEqual(board.status, ReversiBoard.WHITE_WINS)
+
 if __name__ == '__main__':
     from ReversiBoard import *
     unittest.main()
