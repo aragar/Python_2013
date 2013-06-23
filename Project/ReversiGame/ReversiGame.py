@@ -1,6 +1,7 @@
 from os import system
 
 from ReversiBoard.ReversiBoard import *
+from ReversiAI.TrivialAI import TrivialAI
 
 
 class ReversiGame:
@@ -16,10 +17,13 @@ class ReversiGame:
                 break
 
             print(self.board)
-            print("Number of possible moves: " + str(self.board.get_possible_moves(self.board.BLACK)))
+            print("Number of possible moves: " + str(
+                self.board.get_possible_moves(self.board.BLACK)))
             print("Current game status: " + str(self.board.status))
-            print("Black's pieces: " + str(self.board.get_number_of_pieces(self.board.BLACK)))
-            print("White's pieces: " + str(self.board.get_number_of_pieces(self.board.WHITE)))
+            print("Black's pieces: " + str(
+                self.board.get_number_of_pieces(self.board.BLACK)))
+            print("White's pieces: " + str(
+                self.board.get_number_of_pieces(self.board.WHITE)))
             result = self.player_move()
             if result == self.QUIT:
                 break
@@ -59,8 +63,7 @@ class ReversiGame:
                 print("Fuck you!")
 
     def ai_move(self):
-        possible_moves = self.board.get_possible_moves(ReversiBoard.WHITE)
-        x, y = possible_moves[0]
+        x, y = TrivialAI.generate_move(self.board, ReversiBoard.WHITE)
 
         self.board[x][y] = ReversiBoard.WHITE
 
