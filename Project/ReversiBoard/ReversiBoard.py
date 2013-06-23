@@ -16,12 +16,12 @@ class NotYourTurn(Exception):
 
 class ReversiBoard:
     BOARD_SIZE = 8
+    COORDINATE = list(range(1, BOARD_SIZE + 1))
 
     WHITE = 'O'
     BLACK = 'X'
-
     PLAYERS = [WHITE, BLACK]
-    COORDINATE = list(range(1, BOARD_SIZE + 1))
+    OPPOSITE = {WHITE: BLACK, BLACK: WHITE}
 
     GAME_IN_PROGRESS = 0
     BLACK_WINS = 1
@@ -102,7 +102,7 @@ class ReversiBoard:
                 while (new_x in range(0, self.BOARD_SIZE) and
                        new_y in range(0, self.BOARD_SIZE) and
                        self._board[new_x][new_y] in self.PLAYERS and
-                       self._board[new_x][new_y] != player):
+                       self._board[new_x][new_y] == self.OPPOSITE[player]):
                     opposites_line.append((new_x, new_y))
                     new_x += DX[delta]
                     new_y += DY[delta]
@@ -133,9 +133,7 @@ class ReversiBoard:
         if self.status != self.GAME_IN_PROGRESS:
             return
 
-        current_player = self.BLACK
-        if self.last_move == self.BLACK:
-            current_player = self.WHITE
+        current_player = self.OPPOSITE[self.last_move]
 
         if len(self.get_possible_moves(current_player)) == 0:
             black_pieces = self.get_number_of_pieces(self.BLACK)
