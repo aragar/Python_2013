@@ -37,7 +37,7 @@ class ReversiBoard:
         self._board[4][3] = ReversiBoard.BLACK
         self._board[4][4] = ReversiBoard.WHITE
 
-        self.last_move = self.WHITE  # Blacks are first to play
+        self._last_move = self.WHITE  # Blacks are first to play
         self.status = self.GAME_IN_PROGRESS
 
     def __getitem__(self, key):
@@ -64,14 +64,14 @@ class ReversiBoard:
                     raise InvalidMove
                 elif value not in ReversiBoard.PLAYERS:
                     raise InvalidValue
-                elif value == _board.last_move:
+                elif value == _board._last_move:
                     raise NotYourTurn
                 elif (row_number, key) not in _board.get_possible_moves(value):
                     raise InvalidMove
                 else:
                     row[key] = value
                     _board.update_game(row_number, key)
-                    _board.last_move = value
+                    _board._last_move = value
                     _board.update_status()
 
         return ReversiBoardLine()
@@ -133,7 +133,7 @@ class ReversiBoard:
         if self.status != self.GAME_IN_PROGRESS:
             return
 
-        current_player = self.OPPOSITE[self.last_move]
+        current_player = self.OPPOSITE[self._last_move]
 
         if len(self.get_possible_moves(current_player)) == 0:
             black_pieces = self.get_number_of_pieces(self.BLACK)

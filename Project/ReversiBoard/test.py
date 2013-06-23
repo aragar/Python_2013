@@ -136,7 +136,7 @@ class TestReversiBoard(unittest.TestCase):
 
         self.assertEqual(board.status, ReversiBoard.GAME_IN_PROGRESS)
 
-    def test_you_lose_status(self):
+    def test_white_wins_status(self):
         board = ReversiBoard()
 
         board[2][3] = ReversiBoard.BLACK
@@ -159,6 +159,31 @@ class TestReversiBoard(unittest.TestCase):
         board[0][6] = ReversiBoard.WHITE
 
         self.assertEqual(board.status, ReversiBoard.WHITE_WINS)
+
+    def test_black_wins_status(self):
+        board = ReversiBoard()
+
+        board._board = [[' ' for _ in range(0, ReversiBoard.BOARD_SIZE)]
+                        for _ in range(0, ReversiBoard.BOARD_SIZE)]
+        board._board[0][0] = ReversiBoard.BLACK
+        board._board[0][1] = ReversiBoard.BLACK
+        board._board[5][5] = ReversiBoard.WHITE
+        board._last_move = ReversiBoard.BLACK
+        board.update_status()
+
+        self.assertEqual(board.status, ReversiBoard.BLACK_WINS)        
+
+    def test_draw_status(self):
+        board = ReversiBoard()
+
+        board._board = [[' ' for _ in range(0, ReversiBoard.BOARD_SIZE)]
+                        for _ in range(0, ReversiBoard.BOARD_SIZE)]
+        board._board[0][0] = ReversiBoard.BLACK
+        board._board[5][5] = ReversiBoard.WHITE
+        board._last_move = ReversiBoard.WHITE
+        board.update_status()
+
+        self.assertEqual(board.status, ReversiBoard.DRAW)
 
 if __name__ == '__main__':
     from ReversiBoard import *
