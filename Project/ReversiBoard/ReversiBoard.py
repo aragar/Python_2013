@@ -23,8 +23,13 @@ class ReversiBoard:
     PLAYERS = [WHITE, BLACK]
     COORDINATE = list(range(1, BOARD_SIZE + 1))
 
+    GAME_IN_PROGRESS = 0
+    BLACK_WINS = 1
+    WHITE_WINS = 2
+    DRAW = 3
+
     def __init__(self):
-        self._board = [["" for _ in range(0, self.BOARD_SIZE)]
+        self._board = [[' ' for _ in range(0, self.BOARD_SIZE)]
                        for _ in range(0, self.BOARD_SIZE)]
 
         self._board[3][4] = ReversiBoard.BLACK
@@ -33,6 +38,7 @@ class ReversiBoard:
         self._board[4][4] = ReversiBoard.WHITE
 
         self.last_move = self.WHITE  # Blacks are first to play
+        self.status = self.GAME_IN_PROGRESS
 
     def __getitem__(self, key):
         if key not in range(0, self.BOARD_SIZE):
@@ -66,6 +72,7 @@ class ReversiBoard:
                     row[key] = value
                     _board.update_game(row_number, key)
                     _board.last_move = value
+                    _board.update_status()
 
         return ReversiBoardLine()
 
@@ -94,7 +101,7 @@ class ReversiBoard:
                 new_y = y + DY[delta]
                 while (new_x in range(0, self.BOARD_SIZE) and
                        new_y in range(0, self.BOARD_SIZE) and
-                       self._board[new_x][new_y] and
+                       self._board[new_x][new_y] in self.PLAYERS and
                        self._board[new_x][new_y] != player):
                     opposites_line.append((new_x, new_y))
                     new_x += DX[delta]
@@ -122,6 +129,34 @@ class ReversiBoard:
         for (x, y) in opposites:
             self._board[x][y] = player
 
+    def update_status(self):
+        if self.status != self.GAME_IN_PROGRESS:
+            return
+
+        current_player = self.BLACK
+        if self.last_move == self.BLACK:
+            current_player = self.WHITE
+
+        if len(self.get_possible_moves(current_player)) == 0:
+            black_pieces = self.get_number_of_pieces(self.BLACK)
+            white_pieces = self.get_number_of_pieces(self.WHITE)
+
+            if black_pieces > white_pieces:
+                self.status = self.BLACK_WINS
+            elif white_pieces > black_pieces:
+                self.status = self.WHITE_WINS
+            else:
+                self.status = self.DRAW
+
+    def get_number_of_pieces(self, player):
+        if player not in self.PLAYERS:
+            raise InvalidValue
+
+        return len([1 # got problems with '_'
+                    for i in range(0, self.BOARD_SIZE)
+                    for j in range(0, self.BOARD_SIZE)
+                    if self._board[i][j] == player])
+
     def __str__(self):
         HLINE = '  ' + ('+---' * self.BOARD_SIZE) + '+'
         NLINE = '  ' + ('  {} ' * self.BOARD_SIZE).format(
@@ -134,8 +169,7 @@ class ReversiBoard:
 
             representaion += '{} '.format(x + 1)
             for y in range(self.BOARD_SIZE):
-                representaion += '| {} '.format(self._board[
-                                                x][y] if self._board[x][y] else ' ')
+                representaion += '| {} '.format(self._board[x][y])
             representaion += '|\n'
 
             representaion += HLINE + '\n'
