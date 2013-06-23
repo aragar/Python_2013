@@ -1,3 +1,4 @@
 from ReversiGame.ReversiGame import ReversiGame
 
-ReversiGame().__call__()
+if __name__ == '__main__':
+	ReversiGame().__call__()
