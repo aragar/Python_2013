@@ -2,6 +2,7 @@ from os import system
 
 from ReversiBoard.ReversiBoard import *
 from ReversiAI.TrivialAI import TrivialAI
+from ReversiAI.GreedyAI import GreedyAI
 
 
 class ReversiGame:
@@ -63,7 +64,7 @@ class ReversiGame:
                 print("Fuck you!")
 
     def ai_move(self):
-        x, y = TrivialAI.generate_move(self.board, ReversiBoard.WHITE)
+        x, y = GreedyAI.generate_move(self.board, ReversiBoard.WHITE)
 
         self.board[x][y] = ReversiBoard.WHITE
 
