@@ -1,4 +1,4 @@
-from ReversiBoard.ReversiBoard import ReversiBoard
+from reversi_board.reversi_board import ReversiBoard
 
 
 class GreedyAI:

@@ -1,8 +1,8 @@
 from os import system
 
-from ReversiBoard.ReversiBoard import *
-from ReversiAI.TrivialAI import TrivialAI
-from ReversiAI.GreedyAI import GreedyAI
+from reversi_board.reversi_board import *
+from reversi_ai.trivial_ai import TrivialAI
+from reversi_ai.greedy_ai import GreedyAI
 
 
 class ReversiGame:

@@ -186,7 +186,7 @@ class TestReversiBoard(unittest.TestCase):
         self.assertEqual(board.status, ReversiBoard.DRAW)
 
 if __name__ == '__main__':
-    from ReversiBoard import *
+    from reversi_board import *
     unittest.main()
 else:
-    from .ReversiBoard import *
+    from .reversi_board import *

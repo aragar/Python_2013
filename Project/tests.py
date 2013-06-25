@@ -1,5 +1,5 @@
 import unittest
 
-from ReversiBoard.test import *
+from reversi_board.test import *
 
 unittest.main()
