@@ -153,13 +153,8 @@ class ReversiBoard:
                 self.status = self.DRAW
 
     def get_number_of_pieces(self, player):
-        if player not in self.PLAYERS:
-            raise InvalidValue
-
-        return len([1  # got problems with '_'
-                    for i in range(0, self.BOARD_SIZE)
-                    for j in range(0, self.BOARD_SIZE)
-                    if self._board[i][j] == player])
+        return sum(self._board[i].count(player)
+                   for i in range(0, self.BOARD_SIZE))
 
     def can_player_move(self, player):
         return len(self.get_possible_moves(player)) > 0

@@ -42,7 +42,10 @@ class ReversiGame:
             if self.board.can_player_move(ReversiBoard.WHITE):
                 print(self.board)
                 self.ai_move()
+            else:
+                self.board.skip_player_move()
 
+        print(self.board)
         if self.board.status == ReversiBoard.BLACK_WINS:
             print("YOU WIN !!! ... WTF!? HOW!?")
         elif self.board.status == ReversiBoard.WHITE_WINS:
