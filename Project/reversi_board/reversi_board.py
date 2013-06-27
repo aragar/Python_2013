@@ -165,9 +165,8 @@ class ReversiBoard:
     def copy(self):
         copy_board = ReversiBoard()
 
-        copy_board._board = [self._board[i][j]
-                             for i in range(0, self.BOARD_SIZE)
-                             for j in range(0, self.BOARD_SIZE)]
+        copy_board._board = [self._board[i][:]
+                             for i in range(0, self.BOARD_SIZE)]
         copy_board._last_move = self._last_move
         copy_board.status = self.status
 
