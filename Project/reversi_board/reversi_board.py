@@ -20,6 +20,7 @@ class ReversiBoard:
 
     WHITE = 'O'
     BLACK = 'X'
+    EMPTY = ' '
     PLAYERS = [WHITE, BLACK]
     OPPOSITE = {WHITE: BLACK, BLACK: WHITE}
 
@@ -29,13 +30,15 @@ class ReversiBoard:
     DRAW = 3
 
     def __init__(self):
-        self._board = [[' ' for _ in range(0, self.BOARD_SIZE)]
+        self._board = [[self.EMPTY for _ in range(0, self.BOARD_SIZE)]
                        for _ in range(0, self.BOARD_SIZE)]
 
-        self._board[3][4] = ReversiBoard.BLACK
-        self._board[3][3] = ReversiBoard.WHITE
-        self._board[4][3] = ReversiBoard.BLACK
-        self._board[4][4] = ReversiBoard.WHITE
+        if self.BOARD_SIZE > 2:
+            half_size = int(self.BOARD_SIZE / 2)
+            self._board[half_size - 1][half_size] = ReversiBoard.BLACK
+            self._board[half_size - 1][half_size - 1] = ReversiBoard.WHITE
+            self._board[half_size][half_size - 1] = ReversiBoard.BLACK
+            self._board[half_size][half_size] = ReversiBoard.WHITE
 
         self._last_move = self.WHITE  # Blacks are first to play
         self.status = self.GAME_IN_PROGRESS
@@ -80,7 +83,7 @@ class ReversiBoard:
         possible_moves = [(x, y)
                           for x in range(0, self.BOARD_SIZE)
                           for y in range(0, self.BOARD_SIZE)
-                          if (self._board[x][y] not in self.PLAYERS and
+                          if (self._board[x][y] == self.EMPTY and
                               len(self.get_cells_to_flip(x, y, player)) > 0)]
 
         return possible_moves
@@ -101,7 +104,6 @@ class ReversiBoard:
                 new_y = y + DY[delta]
                 while (new_x in range(0, self.BOARD_SIZE) and
                        new_y in range(0, self.BOARD_SIZE) and
-                       self._board[new_x][new_y] in self.PLAYERS and
                        self._board[new_x][new_y] == self.OPPOSITE[player]):
                     opposites_line.append((new_x, new_y))
                     new_x += DX[delta]
@@ -133,9 +135,13 @@ class ReversiBoard:
         if self.status != self.GAME_IN_PROGRESS:
             return
 
-        current_player = self.OPPOSITE[self._last_move]
+        player = self.OPPOSITE[self._last_move]
+        opponent = self.OPPOSITE[player]
 
-        if len(self.get_possible_moves(current_player)) == 0:
+        can_player_move = self.can_player_move(player)
+        can_opponent_move = self.can_player_move(opponent)
+
+        if not can_player_move and not can_opponent_move:
             black_pieces = self.get_number_of_pieces(self.BLACK)
             white_pieces = self.get_number_of_pieces(self.WHITE)
 
@@ -150,15 +156,21 @@ class ReversiBoard:
         if player not in self.PLAYERS:
             raise InvalidValue
 
-        return len([1 # got problems with '_'
+        return len([1  # got problems with '_'
                     for i in range(0, self.BOARD_SIZE)
                     for j in range(0, self.BOARD_SIZE)
                     if self._board[i][j] == player])
 
+    def can_player_move(self, player):
+        return len(self.get_possible_moves(player)) > 0
+
+    def skip_player_move(self):
+        self._last_move = self.OPPOSITE[self._last_move]
+
     def copy(self):
         copy_board = ReversiBoard()
 
-        copy_board._board = [self._board[i][j] 
+        copy_board._board = [self._board[i][j]
                              for i in range(0, self.BOARD_SIZE)
                              for j in range(0, self.BOARD_SIZE)]
         copy_board._last_move = self._last_move

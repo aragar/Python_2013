@@ -8,6 +8,7 @@ from reversi_ai.greedy_ai import GreedyAI
 class ReversiGame:
 
     QUIT = 'quit'
+    SKIP = 'skip'
 
     def __init__(self):
         self.board = ReversiBoard()
@@ -17,23 +18,30 @@ class ReversiGame:
             if self.board.status != ReversiBoard.GAME_IN_PROGRESS:
                 break
 
-            print(self.board)
-            print("Number of possible moves: " + str(
-                self.board.get_possible_moves(self.board.BLACK)))
-            print("Current game status: " + str(self.board.status))
-            print("Black's pieces: " + str(
-                self.board.get_number_of_pieces(self.board.BLACK)))
-            print("White's pieces: " + str(
-                self.board.get_number_of_pieces(self.board.WHITE)))
-            result = self.player_move()
-            if result == self.QUIT:
-                break
+            if self.board.can_player_move(ReversiBoard.BLACK):
+                print(self.board)
+                print("Possible moves: " + str(
+                    [(x + 1, y + 1)
+                     for x, y
+                     in self.board.get_possible_moves(self.board.BLACK)]))
+                print("Current game status: " + str(self.board.status))
+                print("Black's pieces: " + str(
+                    self.board.get_number_of_pieces(self.board.BLACK)))
+                print("White's pieces: " + str(
+                    self.board.get_number_of_pieces(self.board.WHITE)))
+
+                result = self.player_move()
+                if result == self.QUIT:
+                    break
+            else:
+                self.board.skip_player_move()
 
             if self.board.status != ReversiBoard.GAME_IN_PROGRESS:
                 break
 
-            print(self.board)
-            self.ai_move()
+            if self.board.can_player_move(ReversiBoard.WHITE):
+                print(self.board)
+                self.ai_move()
 
         if self.board.status == ReversiBoard.BLACK_WINS:
             print("YOU WIN !!! ... WTF!? HOW!?")
@@ -45,6 +53,10 @@ class ReversiGame:
             print("End ... er's game!")
 
     def player_move(self):
+
+        if not self.board.can_player_move(ReversiBoard.BLACK):
+            self.board.skip_player_move()
+            return self.SKIP
 
         while True:
             move = input('--> ').lower().split()
@@ -64,8 +76,11 @@ class ReversiGame:
                 print("Fuck you!")
 
     def ai_move(self):
-        x, y = GreedyAI.generate_move(self.board, ReversiBoard.WHITE)
+        if not self.board.can_player_move(ReversiBoard.WHITE):
+            self.board.skip_player_move()
+            return self.SKIP
 
+        x, y = TrivialAI.generate_move(self.board, ReversiBoard.WHITE)
         self.board[x][y] = ReversiBoard.WHITE
 
 

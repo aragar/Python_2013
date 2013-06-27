@@ -36,6 +36,21 @@ class TestReversiBoard(unittest.TestCase):
         possible_moves = board.get_possible_moves(ReversiBoard.BLACK)
         self.assertEqual(possible_moves, [(2, 3), (3, 2), (4, 5), (5, 4)])
 
+    def test_possible_moves_advanced(self):
+        board = ReversiBoard()
+
+        board._board = [[ReversiBoard.WHITE
+                         for y in range(0, ReversiBoard.BOARD_SIZE)]
+                        for x in range(0, ReversiBoard.BOARD_SIZE)]
+        board._board[7][7] = ReversiBoard.EMPTY
+        board._board[7][5] = ReversiBoard.BLACK
+
+        board.status = ReversiBoard.GAME_IN_PROGRESS
+        board._last_move = ReversiBoard.WHITE
+
+        possible_moves = board.get_possible_moves(ReversiBoard.BLACK)
+        self.assertEqual(possible_moves, [(7, 7)])
+
     def test_get_opposites(self):
         board = ReversiBoard()
         self.assertEqual(board.get_cells_to_flip(2, 3, ReversiBoard.BLACK),
@@ -157,6 +172,53 @@ class TestReversiBoard(unittest.TestCase):
         board[1][4] = ReversiBoard.WHITE
         board[0][5] = ReversiBoard.BLACK
         board[0][6] = ReversiBoard.WHITE
+        board.skip_player_move()
+        board[1][5] = ReversiBoard.WHITE
+        board.skip_player_move()
+        board[2][4] = ReversiBoard.WHITE
+        board.skip_player_move()
+        board[4][1] = ReversiBoard.WHITE
+        board[3][1] = ReversiBoard.BLACK
+        board[4][0] = ReversiBoard.WHITE
+        board[3][0] = ReversiBoard.BLACK
+        board[4][2] = ReversiBoard.WHITE
+        board[5][0] = ReversiBoard.BLACK
+        board[3][5] = ReversiBoard.WHITE
+        board[2][5] = ReversiBoard.BLACK
+        board[2][6] = ReversiBoard.WHITE
+        board[1][6] = ReversiBoard.BLACK
+        board[1][7] = ReversiBoard.WHITE
+        board[0][7] = ReversiBoard.BLACK
+        board[2][7] = ReversiBoard.WHITE
+        board[3][7] = ReversiBoard.BLACK
+        board[3][6] = ReversiBoard.WHITE
+        board[5][2] = ReversiBoard.BLACK
+        board[4][6] = ReversiBoard.WHITE
+        board[4][7] = ReversiBoard.BLACK
+        board[5][1] = ReversiBoard.WHITE
+        board[6][2] = ReversiBoard.BLACK
+        board[5][3] = ReversiBoard.WHITE
+        board[5][4] = ReversiBoard.BLACK
+        board[5][5] = ReversiBoard.WHITE
+        board[5][6] = ReversiBoard.BLACK
+        board[5][7] = ReversiBoard.WHITE
+        board[6][7] = ReversiBoard.BLACK
+        board[6][0] = ReversiBoard.WHITE
+        board.skip_player_move()
+        board[6][1] = ReversiBoard.WHITE
+        board[7][0] = ReversiBoard.BLACK
+        board[6][3] = ReversiBoard.WHITE
+        board[6][4] = ReversiBoard.BLACK
+        board[6][5] = ReversiBoard.WHITE
+        board[6][6] = ReversiBoard.BLACK
+        board[7][6] = ReversiBoard.WHITE
+        board[7][1] = ReversiBoard.BLACK
+        board[7][2] = ReversiBoard.WHITE
+        board[7][3] = ReversiBoard.BLACK
+        board[7][4] = ReversiBoard.WHITE
+        board[7][5] = ReversiBoard.BLACK
+        board.skip_player_move()
+        board[7][7] = ReversiBoard.BLACK
 
         self.assertEqual(board.status, ReversiBoard.WHITE_WINS)
 
@@ -171,7 +233,7 @@ class TestReversiBoard(unittest.TestCase):
         board._last_move = ReversiBoard.BLACK
         board.update_status()
 
-        self.assertEqual(board.status, ReversiBoard.BLACK_WINS)        
+        self.assertEqual(board.status, ReversiBoard.BLACK_WINS)
 
     def test_draw_status(self):
         board = ReversiBoard()
