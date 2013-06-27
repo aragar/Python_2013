@@ -1,91 +1,60 @@
 from os import system
 
-from reversi_board.reversi_board import *
-from reversi_ai.trivial_ai import TrivialAI
-from reversi_ai.greedy_ai import GreedyAI
+from reversi_board.reversi_board import ReversiBoard
+from reversi_player.human_player import HumanPlayer
+from reversi_player.computer_player import ComputerPlayer
+from reversi_game.constants import ReversiGameConstants
 
 
 class ReversiGame:
 
-    QUIT = 'quit'
-    SKIP = 'skip'
-
     def __init__(self):
-        self.board = ReversiBoard()
+        self._board = ReversiBoard()
+
+        self._human = HumanPlayer(self._board, ReversiBoard.BLACK)
+        self._computer = ComputerPlayer(self._board, ReversiBoard.WHITE)
+
+        self._current_player = self._human
 
     def __call__(self):
         while True:
-            if self.board.status != ReversiBoard.GAME_IN_PROGRESS:
+            print(self._board)
+            print("Possible moves: " +
+                  str([(x + 1, y + 1)
+                       for x, y
+                       in self._board.get_possible_moves(self._current_player.get_color())]))
+            print("Black's: " +
+                  str(self._board.get_number_of_pieces(ReversiBoard.BLACK)))
+            print("White's: " +
+                  str(self._board.get_number_of_pieces(ReversiBoard.WHITE)))
+
+            player_move = self._current_player.move()
+
+            if player_move == ReversiGameConstants.QUIT:
                 break
 
-            if self.board.can_player_move(ReversiBoard.BLACK):
-                print(self.board)
-                print("Possible moves: " + str(
-                    [(x + 1, y + 1)
-                     for x, y
-                     in self.board.get_possible_moves(self.board.BLACK)]))
-                print("Current game status: " + str(self.board.status))
-                print("Black's pieces: " + str(
-                    self.board.get_number_of_pieces(self.board.BLACK)))
-                print("White's pieces: " + str(
-                    self.board.get_number_of_pieces(self.board.WHITE)))
-
-                result = self.player_move()
-                if result == self.QUIT:
-                    break
-            else:
-                self.board.skip_player_move()
-
-            if self.board.status != ReversiBoard.GAME_IN_PROGRESS:
+            if self._board.status != ReversiBoard.GAME_IN_PROGRESS:
                 break
 
-            if self.board.can_player_move(ReversiBoard.WHITE):
-                print(self.board)
-                self.ai_move()
-            else:
-                self.board.skip_player_move()
+            self._current_player = self.next_player()
 
-        print(self.board)
-        if self.board.status == ReversiBoard.BLACK_WINS:
+        print(self._board)
+        if self.board.status == self._human._color:
             print("YOU WIN !!! ... WTF!? HOW!?")
-        elif self.board.status == ReversiBoard.WHITE_WINS:
+        elif self.board.status == self._computer._color:
             print("YOU LOSE !!! ... which was quite expected ^_^")
         elif self.board.status == ReversiBoard.DRAW:
             print("IT'S A DRAW !!! ... You should be quite lucky about that.")
         else:
-            print("End ... er's game!")
+            print("End!")
 
-    def player_move(self):
+    def next_player(self):
+        if self._current_player is self._human:
+            next_player = self._computer
+        else:
+            next_player = self._human
 
-        if not self.board.can_player_move(ReversiBoard.BLACK):
-            self.board.skip_player_move()
-            return self.SKIP
-
-        while True:
-            move = input('--> ').lower().split()
-            print(move)
-
-            if len(move) == 2:
-                try:
-                    x = int(move[0]) - 1
-                    y = int(move[1]) - 1
-                    self.board[x][y] = ReversiBoard.BLACK
-                    break
-                except:
-                    print("Please, enter valid coordinates.")
-            elif len(move) == 1 and move[0] == self.QUIT:
-                return self.QUIT
-            else:
-                print("Fuck you!")
-
-    def ai_move(self):
-        if not self.board.can_player_move(ReversiBoard.WHITE):
-            self.board.skip_player_move()
-            return self.SKIP
-
-        x, y = TrivialAI.generate_move(self.board, ReversiBoard.WHITE)
-        self.board[x][y] = ReversiBoard.WHITE
-
+        return next_player
 
 if __name__ == '__main__':
     ReversiGame().__call__()
