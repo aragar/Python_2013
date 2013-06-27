@@ -9,3 +9,9 @@ class Player:
 
     def move(self):
         pass
+
+    def get_color(self):
+    	return self._color
+
+    def get_board(self):
+    	return self._board.copy()
