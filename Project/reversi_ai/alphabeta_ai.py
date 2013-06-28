@@ -19,21 +19,21 @@ class AlphaBetaAI:
 
     def _generate_alphabeta_move(self, board, is_maximizing, current_depth, alpha, beta):
         initial_player = self._player.get_color()
-        current_player = initial_player if is_maximizing else ReversiBoard.OPPOSITE[
-            initial_player]
+        current_player = initial_player if is_maximizing else ReversiBoard.OPPOSITE[initial_player]
         player_skips_move = False
         possible_moves = []
 
         is_final_move = current_depth > self._max_depth
 
-        # Settings, if the player is skipping a move.
         if not is_final_move:
             possible_moves = board.get_possible_moves(current_player)
 
             if not board.can_player_move(current_player):
-                playerSkipsMove = True
+                player_skips_move = True
                 opposite = ReversiBoard.OPPOSITE[current_player]
+                
                 possible_moves = board.get_possible_moves(opposite)
+                current_player = opposite
 
                 isFinalMove = board.can_player_move(opposite)
 
@@ -50,6 +50,9 @@ class AlphaBetaAI:
 
             for x, y in possible_moves:
                 next_board = board.copy()
+
+                if player_skips_move:
+                    next_board.skip_player_move();
                 next_board[x][y] = current_player
 
                 next_is_maximazing = is_maximizing if player_skips_move else not is_maximizing
@@ -90,8 +93,7 @@ class AlphaBetaAI:
         can_player_move = board.can_player_move(player)
         can_opponent_move = board.can_player_move(opponent)
 
-        if not can_player_move and \
-                not can_opponent_move:
+        if not can_player_move and not can_opponent_move:
             player_pieces = board.get_number_of_pieces(player)
             opponent_pieces = board.get_number_of_pieces(opponent)
             result = player_pieces - opponent_pieces
