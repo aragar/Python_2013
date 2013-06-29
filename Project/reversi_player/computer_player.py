@@ -7,6 +7,10 @@ from reversi_game.constants import ReversiGameConstants
 
 class ComputerPlayer(Player):
 
+    def __init__(self, board, color):
+        super().__init__(board, color)
+        self._alphabeta_ai = AlphaBetaAI(self, 4)
+
     def move(self):
         can_computer_move = self._board.can_player_move(self._color)
 
@@ -15,7 +19,6 @@ class ComputerPlayer(Player):
             print("The computer can't move.")
             return ReversiGameConstants.SKIP
 
-        alphabeta_ai = AlphaBetaAI(self, 4)
-        x, y = alphabeta_ai.generate_move()
+        x, y = self._alphabeta_ai.generate_move()
         print("Computer's move: {}, {}".format(x + 1, y + 1))
         self._board[x][y] = self._color

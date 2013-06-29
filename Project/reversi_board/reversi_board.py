@@ -97,7 +97,7 @@ class ReversiBoard:
             DX = [1, 1, 0, -1, -1, -1, 0, 1]
             DY = [0, -1, -1, -1, 0, 1, 1, 1]
 
-            for delta in range(0, self.BOARD_SIZE):
+            for delta in range(0, len(DX)):
                 opposites_line = []
 
                 new_x = x + DX[delta]

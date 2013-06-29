@@ -35,7 +35,7 @@ class AlphaBetaAI:
                 possible_moves = board.get_possible_moves(opposite)
                 current_player = opposite
 
-                isFinalMove = board.can_player_move(opposite)
+                is_final_move = board.can_player_move(opposite)
 
         if is_final_move:
             result_x = -1
